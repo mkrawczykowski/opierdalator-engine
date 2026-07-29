@@ -2,6 +2,8 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
+from oe.palette import PaletteGenerator
+
 from .sections import (
     draw_title,
     draw_palette,
@@ -28,13 +30,17 @@ class PNGRenderer:
         image = Image.new(
             "RGB",
             (self.WIDTH, self.HEIGHT),
-            "#F5F5F3"
+            palette["background"]
         )
 
         draw = ImageDraw.Draw(image)
 
         title_font = ImageFont.load_default()
         body_font = ImageFont.load_default()
+
+        palette = PaletteGenerator().generate(
+            variation
+        )
 
         draw_title(
             draw,
@@ -44,6 +50,7 @@ class PNGRenderer:
         draw_palette(
             draw,
             body_font,
+            palette,
         )
 
         draw_typography(
