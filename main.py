@@ -1,6 +1,7 @@
 from oe import VERSION
 from oe.theme import ThemeDNA
 from oe.variation import VariationEngine
+from oe.renderer import PNGRenderer
 
 
 def main():
@@ -17,6 +18,8 @@ def main():
 
     engine = VariationEngine(seed=42)
 
+    renderer = PNGRenderer()
+
     print()
     print("===================================")
     print("      Opierdalator Engine")
@@ -28,19 +31,16 @@ def main():
     dna.describe()
 
     print()
-    print("Generated variations")
-    print("-------------------------")
 
-    for i in range(5):
+    variation = engine.generate(dna)
 
-        variation = engine.generate(dna)
+    renderer.render(
+        dna,
+        variation,
+        "theme_board.png"
+    )
 
-        print()
-        print(f"Variation {i + 1}")
-
-        for key, value in variation.items():
-            print(f"{key:10} {value:.3f}")
-
+    print("Generated: theme_board.png")
     print()
 
 
