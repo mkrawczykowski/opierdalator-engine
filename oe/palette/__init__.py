@@ -1,0 +1,1 @@
+from .palette_generator import PaletteGenerator
