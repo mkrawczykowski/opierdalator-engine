@@ -1,0 +1,3 @@
+softness=0.2
+boldness=0.3
+elegance=0.8

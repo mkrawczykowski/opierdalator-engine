@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+
+
 @dataclass
 class TypographyToken:
     font_path: str
