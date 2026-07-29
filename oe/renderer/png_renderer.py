@@ -27,6 +27,10 @@ class PNGRenderer:
         filename,
     ):
 
+        palette = PaletteGenerator().generate(
+            variation
+        )
+
         image = Image.new(
             "RGB",
             (self.WIDTH, self.HEIGHT),
@@ -37,10 +41,6 @@ class PNGRenderer:
 
         title_font = ImageFont.load_default()
         body_font = ImageFont.load_default()
-
-        palette = PaletteGenerator().generate(
-            variation
-        )
 
         draw_title(
             draw,

@@ -1,4 +1,8 @@
-def draw_palette(draw, body_font):
+def draw_palette(
+    draw,
+    body_font,
+    palette,
+):
 
     draw.text(
         (40, 100),
@@ -8,11 +12,11 @@ def draw_palette(draw, body_font):
     )
 
     colors = [
-        "#496A81",
-        "#8CAFB8",
-        "#D9E4DD",
-        "#FFFFFF",
-        "#2D3436"
+        palette["primary"],
+        palette["secondary"],
+        palette["surface"],
+        palette["background"],
+        palette["text"],
     ]
 
     x = 40
