@@ -7,41 +7,50 @@ class PNGRenderer:
 
     WIDTH = 1000
     HEIGHT = 900
-    MARGIN = 40
 
     def render(self, dna, variation, filename):
 
-        image = Image.new(
+        self.image = Image.new(
             "RGB",
             (self.WIDTH, self.HEIGHT),
             "#F5F5F3"
         )
 
-        draw = ImageDraw.Draw(image)
+        self.draw = ImageDraw.Draw(self.image)
 
-        title_font = ImageFont.load_default()
-        body_font = ImageFont.load_default()
+        self.title_font = ImageFont.load_default()
+        self.body_font = ImageFont.load_default()
 
-        # -------------------------------------------------
-        # Title
-        # -------------------------------------------------
+        self._draw_title()
+        self._draw_palette()
+        self._draw_typography()
+        self._draw_button()
+        self._draw_card()
+        self._draw_hero()
+        self._draw_variation_values(variation)
 
-        draw.text(
+        self.image.save(filename)
+
+    # -------------------------------------------------
+
+    def _draw_title(self):
+
+        self.draw.text(
             (40, 30),
             "Opierdalator Engine\nTheme Board",
             fill="black",
-            font=title_font
+            font=self.title_font
         )
 
-        # -------------------------------------------------
-        # Color Palette
-        # -------------------------------------------------
+    # -------------------------------------------------
 
-        draw.text(
+    def _draw_palette(self):
+
+        self.draw.text(
             (40, 100),
             "Color Palette",
             fill="black",
-            font=body_font
+            font=self.body_font
         )
 
         colors = [
@@ -56,7 +65,7 @@ class PNGRenderer:
 
         for color in colors:
 
-            draw.rounded_rectangle(
+            self.draw.rounded_rectangle(
                 (x, 130, x + 90, 220),
                 radius=12,
                 fill=color
@@ -64,129 +73,127 @@ class PNGRenderer:
 
             x += 110
 
-        # -------------------------------------------------
-        # Typography
-        # -------------------------------------------------
+    # -------------------------------------------------
 
-        draw.text(
+    def _draw_typography(self):
+
+        self.draw.text(
             (40, 260),
             "Typography",
             fill="black",
-            font=body_font
+            font=self.body_font
         )
 
-        draw.text(
+        self.draw.text(
             (40, 300),
             "Heading Example",
             fill="black",
-            font=title_font
+            font=self.title_font
         )
 
-        draw.text(
+        self.draw.text(
             (40, 330),
             "Body text example. This is placeholder content.",
             fill="#555555",
-            font=body_font
+            font=self.body_font
         )
 
-        # -------------------------------------------------
-        # Button
-        # -------------------------------------------------
+    # -------------------------------------------------
 
-        draw.text(
+    def _draw_button(self):
+
+        self.draw.text(
             (40, 390),
             "Button",
             fill="black",
-            font=body_font
+            font=self.body_font
         )
 
-        draw.rounded_rectangle(
+        self.draw.rounded_rectangle(
             (40, 420, 220, 470),
             radius=12,
             fill="#496A81"
         )
 
-        draw.text(
+        self.draw.text(
             (90, 438),
             "Book Session",
             fill="white",
-            font=body_font
+            font=self.body_font
         )
 
-        # -------------------------------------------------
-        # Card
-        # -------------------------------------------------
+    # -------------------------------------------------
 
-        draw.text(
+    def _draw_card(self):
+
+        self.draw.text(
             (300, 390),
             "Card",
             fill="black",
-            font=body_font
+            font=self.body_font
         )
 
-        draw.rounded_rectangle(
+        self.draw.rounded_rectangle(
             (300, 420, 620, 620),
             radius=14,
             fill="white",
             outline="#DDDDDD"
         )
 
-        draw.text(
+        self.draw.text(
             (330, 450),
             "Card title",
             fill="black",
-            font=body_font
+            font=self.body_font
         )
 
-        draw.text(
+        self.draw.text(
             (330, 490),
             "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.",
             fill="#666666",
-            font=body_font
+            font=self.body_font
         )
 
-        # -------------------------------------------------
-        # Hero Preview
-        # -------------------------------------------------
+    # -------------------------------------------------
 
-        draw.text(
+    def _draw_hero(self):
+
+        self.draw.text(
             (40, 660),
             "Hero Preview",
             fill="black",
-            font=body_font
+            font=self.body_font
         )
 
-        draw.rounded_rectangle(
+        self.draw.rounded_rectangle(
             (40, 690, 920, 840),
             radius=16,
             fill="#E9EFEA"
         )
 
-        draw.text(
+        self.draw.text(
             (80, 720),
             "Find calm.\nFind clarity.",
             fill="#2D3436",
-            font=title_font
+            font=self.title_font
         )
 
-        draw.text(
+        self.draw.text(
             (80, 770),
             "Example hero section for visual testing.",
             fill="#555555",
-            font=body_font
+            font=self.body_font
         )
 
-        # -------------------------------------------------
-        # Variation Values
-        # -------------------------------------------------
+    # -------------------------------------------------
 
-        y = 100
+    def _draw_variation_values(self, variation):
 
-        draw.text(
+        self.draw.text(
             (760, 100),
             "Variation",
             fill="black",
-            font=body_font
+            font=self.body_font
         )
 
         labels = [
@@ -201,13 +208,11 @@ class PNGRenderer:
 
         for name, value in labels:
 
-            draw.text(
+            self.draw.text(
                 (760, y),
                 f"{name}: {value:.2f}",
                 fill="black",
-                font=body_font
+                font=self.body_font
             )
 
             y += 35
-
-        image.save(filename)
