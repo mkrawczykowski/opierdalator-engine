@@ -4,27 +4,38 @@ from dataclasses import dataclass
 @dataclass
 class ThemeDNA:
     """
-    Opisuje estetykę projektu.
+    Opisuje estetykę marki.
 
-    Wszystkie wartości są znormalizowane
-    do zakresu 0.0–1.0.
+    Każda cecha jest opisana przez:
 
-    Nie są to jeszcze konkretne wartości
-    renderera, tylko cechy wizualne.
+    - wartość docelową
+    - maksymalne odchylenie
+
+    Variation Engine będzie losował
+    konkretną wartość z tego zakresu.
     """
 
-    softness: float
-    contrast: float
-    rhythm: float
-    geometry: float
-    elegance: float
+    softness: tuple[float, float]
+    contrast: tuple[float, float]
+    rhythm: tuple[float, float]
+    geometry: tuple[float, float]
+    elegance: tuple[float, float]
 
     def describe(self):
 
         print("Theme DNA")
-        print("-----------------------")
-        print(f"Softness : {self.softness:.2f}")
-        print(f"Contrast : {self.contrast:.2f}")
-        print(f"Rhythm   : {self.rhythm:.2f}")
-        print(f"Geometry : {self.geometry:.2f}")
-        print(f"Elegance : {self.elegance:.2f}")
+        print("-------------------------")
+
+        self._print("Softness", self.softness)
+        self._print("Contrast", self.contrast)
+        self._print("Rhythm", self.rhythm)
+        self._print("Geometry", self.geometry)
+        self._print("Elegance", self.elegance)
+
+    def _print(self, name, value):
+
+        target, variation = value
+
+        print(
+            f"{name:10} target={target:.2f} variation=±{variation:.2f}"
+        )
