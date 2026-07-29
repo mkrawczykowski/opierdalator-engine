@@ -5,27 +5,50 @@ from oe.theme import ThemeDNA
 from oe.variation import VariationEngine
 from oe.renderer import PNGRenderer, LayoutRenderer
 from oe.design.tokens import default_tokens
-from oe.content import parse
+from oe.content import parse, parse_tokens, parse_settings, TokenVariator
 
 INPUT_DIR = pathlib.Path("input")
 OUTPUT_DIR = pathlib.Path("output")
 
 
-def render_for_file(md_path: pathlib.Path, layout_renderer: LayoutRenderer) -> None:
-    tokens = default_tokens()
-    sections = parse(md_path, tokens)
+def render_project(
+    project_dir: pathlib.Path,
+    layout_renderer: LayoutRenderer,
+    variator: TokenVariator,
+) -> None:
+    name = project_dir.name
+    contents_path = project_dir / "contents.md"
+    settings_path = project_dir / "settings.md"
 
-    if not sections:
-        print(f"  Warning: no #content sections found in {md_path.name}, skipping.")
+    settings = parse_settings(settings_path)
+    base_tokens = default_tokens()
+
+    # Najpierw aplikuj ustawienia z MD (kolory, padding z #components)
+    # na default_tokens — to jest baza dla variatora.
+    md_tokens = parse_tokens(contents_path, base_tokens)
+
+    # Wstępne parsowanie sekcji tylko po to, żeby sprawdzić czy #content istnieje
+    probe = parse(contents_path, md_tokens)
+    if not probe:
+        print(f"  Warning: no #content found in {name}/contents.md, skipping.")
         return
 
-    out_dir = OUTPUT_DIR / md_path.stem
+    out_dir = OUTPUT_DIR / name
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    out_file = out_dir / "layout_board.png"
-    layout_renderer.render(sections, tokens, str(out_file))
+    print(f"  Project: {name}  "
+          f"[layouts={settings.no_of_layouts}, variability={settings.variability_pct}%]")
 
-    print(f"  Generated: {out_file}")
+    for i in range(1, settings.no_of_layouts + 1):
+        # Variator działa na tokenach z MD (nie na surowych defaults)
+        varied_tokens = variator.vary(md_tokens, settings.variability_pct, seed=i)
+
+        # Przebuduj sekcje z nowym zestawem tokenów
+        sections = parse(contents_path, varied_tokens)
+
+        out_file = out_dir / f"layout_board_{i}.png"
+        layout_renderer.render(sections, varied_tokens, str(out_file))
+        print(f"    Generated: {out_file.name}")
 
 
 def main():
@@ -59,20 +82,23 @@ def main():
     print("Generated: theme_board.png")
     print()
 
-    # --- Nowy pipeline: input/*.md → output/{name}/layout_board.png
-    md_files = sorted(INPUT_DIR.glob("*.md"))
+    # --- Nowy pipeline: input/{name}/contents.md → output/{name}/layout_board_N.png
+    project_dirs = sorted(
+        p for p in INPUT_DIR.iterdir()
+        if p.is_dir() and (p / "contents.md").exists()
+    )
 
-    if not md_files:
-        print(f"No .md files found in {INPUT_DIR}/")
+    if not project_dirs:
+        print(f"No projects found in {INPUT_DIR}/")
         print()
         return
 
     layout_renderer = LayoutRenderer()
+    variator = TokenVariator()
 
-    print(f"Processing {len(md_files)} file(s) from {INPUT_DIR}/:")
-    for md_path in md_files:
-        print(f"  Reading: {md_path.name}")
-        render_for_file(md_path, layout_renderer)
+    print(f"Processing {len(project_dirs)} project(s) from {INPUT_DIR}/:")
+    for project_dir in project_dirs:
+        render_project(project_dir, layout_renderer, variator)
 
     print()
 

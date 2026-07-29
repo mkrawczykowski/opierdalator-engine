@@ -1,10 +1,10 @@
 #color_palette
-	color_main_accent: #034AA6
-	color_secondary_accent: #D9910D
-	color_text: #272727
-	color_headings: #272727
-	color_borders: #f6f6f6
-	color_background: #f2f2f2
+	$color_main_accent: #034AA6
+	$color_secondary_accent: #D9910D
+	$color_text: #272727
+	$color_headings: #272727
+	$color_borders: #f6f6f6
+	$color_background: #f2f2f2
 	
 #typography
 paragraph
@@ -18,12 +18,12 @@ heading_1
 button
 	padding_vertical: 10
 	padding_horizontal: 20
-	background: color_main_accent
+	background_color: $color_secondary_accent
 	border: 0
 	
 section
 	padding_vertical: 80
-	background_color: color_background
+	background_color: $color_background
 	
 	
 	
@@ -31,8 +31,10 @@ section
 @@section
 @@heading_1: testowy heading
 @@text:  jakiś krótki tekst
+@@button: przycisk
 
 
 @@section
 @@heading_1: nagłowek drugiej sekcji
 @@text: to jest drugi akapit
+@@button: przycisk drugi
