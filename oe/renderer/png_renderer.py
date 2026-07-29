@@ -2,100 +2,71 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
+from .sections import (
+    draw_title,
+    draw_palette,
+    draw_typography,
+)
+
 
 class PNGRenderer:
 
     WIDTH = 1000
     HEIGHT = 900
 
-    def render(self, dna, variation, filename):
+    def render(
+        self,
+        dna,
+        variation,
+        filename,
+    ):
 
         self.image = Image.new(
             "RGB",
-            (self.WIDTH, self.HEIGHT),
+            (
+                self.WIDTH,
+                self.HEIGHT,
+            ),
             "#F5F5F3"
         )
 
-        self.draw = ImageDraw.Draw(self.image)
+        self.draw = ImageDraw.Draw(
+            self.image
+        )
 
         self.title_font = ImageFont.load_default()
         self.body_font = ImageFont.load_default()
 
-        self._draw_title()
-        self._draw_palette()
-        self._draw_typography()
+        draw_title(
+            self.draw,
+            self.title_font,
+        )
+
+        draw_palette(
+            self.draw,
+            self.body_font,
+        )
+
+        draw_typography(
+            self.draw,
+            self.title_font,
+            self.body_font,
+        )
+
+        #
+        # Te sekcje przeniesiemy
+        # w następnym commicie.
+        #
+
         self._draw_button()
         self._draw_card()
         self._draw_hero()
-        self._draw_variation_values(variation)
-
-        self.image.save(filename)
-
-    # -------------------------------------------------
-
-    def _draw_title(self):
-
-        self.draw.text(
-            (40, 30),
-            "Opierdalator Engine\nTheme Board",
-            fill="black",
-            font=self.title_font
+        self._draw_variation_values(
+            variation
         )
 
-    # -------------------------------------------------
-
-    def _draw_palette(self):
-
-        self.draw.text(
-            (40, 100),
-            "Color Palette",
-            fill="black",
-            font=self.body_font
-        )
-
-        colors = [
-            "#496A81",
-            "#8CAFB8",
-            "#D9E4DD",
-            "#FFFFFF",
-            "#2D3436"
-        ]
-
-        x = 40
-
-        for color in colors:
-
-            self.draw.rounded_rectangle(
-                (x, 130, x + 90, 220),
-                radius=12,
-                fill=color
-            )
-
-            x += 110
-
-    # -------------------------------------------------
-
-    def _draw_typography(self):
-
-        self.draw.text(
-            (40, 260),
-            "Typography",
-            fill="black",
-            font=self.body_font
-        )
-
-        self.draw.text(
-            (40, 300),
-            "Heading Example",
-            fill="black",
-            font=self.title_font
-        )
-
-        self.draw.text(
-            (40, 330),
-            "Body text example. This is placeholder content.",
-            fill="#555555",
-            font=self.body_font
+        self.image.save(
+            filename
         )
 
     # -------------------------------------------------
@@ -148,7 +119,10 @@ class PNGRenderer:
         )
 
         self.draw.text(
-            (330, 490),
+            (
+                330,
+                490
+            ),
             "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.",
             fill="#666666",
             font=self.body_font
@@ -172,14 +146,20 @@ class PNGRenderer:
         )
 
         self.draw.text(
-            (80, 720),
+            (
+                80,
+                720
+            ),
             "Find calm.\nFind clarity.",
             fill="#2D3436",
             font=self.title_font
         )
 
         self.draw.text(
-            (80, 770),
+            (
+                80,
+                770
+            ),
             "Example hero section for visual testing.",
             fill="#555555",
             font=self.body_font
@@ -187,10 +167,16 @@ class PNGRenderer:
 
     # -------------------------------------------------
 
-    def _draw_variation_values(self, variation):
+    def _draw_variation_values(
+        self,
+        variation,
+    ):
 
         self.draw.text(
-            (760, 100),
+            (
+                760,
+                100
+            ),
             "Variation",
             fill="black",
             font=self.body_font
@@ -209,7 +195,10 @@ class PNGRenderer:
         for name, value in labels:
 
             self.draw.text(
-                (760, y),
+                (
+                    760,
+                    y
+                ),
                 f"{name}: {value:.2f}",
                 fill="black",
                 font=self.body_font
