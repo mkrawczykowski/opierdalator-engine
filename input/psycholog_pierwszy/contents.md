@@ -6,6 +6,7 @@
 	$color_borders: #f6f6f6
 	$color_background: #f2f2f2
 	$color_background_2: #ffffff
+	$color_background_3: #ff0000
 	
 #typography
 button
@@ -32,13 +33,18 @@ section
 	
 row
 	max_width: 1200
-	background_color: $color_background
 	background_color: $color_background_2
 	
+column
+	background_color: $color_background_3
 	
 #content
 @@section
-@@row
+@@row 1/2 5%
+@@column
+@@heading_1: testowy heading, ale nieco dłuższy, żeby sprawdzić, czy się łamie
+@@text: jakiś krótki tekst
+@@button: przycisk
 @@column
 @@heading_1: testowy heading
 @@text: jakiś krótki tekst

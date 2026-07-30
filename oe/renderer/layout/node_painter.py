@@ -8,6 +8,7 @@ from oe.renderer.components.row import Row
 from oe.renderer.components.column import Column
 
 from .layout_node import LayoutNode
+from .text_wrapper import TextWrapper
 
 
 class NodePainter:
@@ -18,6 +19,9 @@ class NodePainter:
     Operuje wyłącznie na danych zawartych w LayoutNode
     i DesignTokens przypisanych do komponentów.
     """
+
+    def __init__(self) -> None:
+        self._wrapper = TextWrapper()
 
     def paint(self, draw: ImageDraw.ImageDraw, node: LayoutNode) -> None:
         """Rysuje node i rekurencyjnie wszystkich jego potomków."""
@@ -39,7 +43,7 @@ class NodePainter:
         elif isinstance(component, Row):
             self._paint_row(draw, node)
         elif isinstance(component, Column):
-            pass  # Column jest transparentny
+            self._paint_column(draw, node)
         elif isinstance(component, Heading1):
             self._paint_text(draw, node)
         elif isinstance(component, Text):
@@ -55,6 +59,19 @@ class NodePainter:
         node: LayoutNode,
     ) -> None:
         component: Section = node.component  # type: ignore[assignment]
+        draw.rectangle(
+            (node.x, node.y, node.x + node.width, node.y + node.height),
+            fill=component.background_color,
+        )
+
+    def _paint_column(
+        self,
+        draw: ImageDraw.ImageDraw,
+        node: LayoutNode,
+    ) -> None:
+        component: Column = node.component  # type: ignore[assignment]
+        if component.background_color is None:
+            return
         draw.rectangle(
             (node.x, node.y, node.x + node.width, node.y + node.height),
             fill=component.background_color,
@@ -79,14 +96,18 @@ class NodePainter:
         component: Text = node.component  # type: ignore[assignment]
         token = component.token
 
-        font = self._load_font(token.font_path, token.font_size)
+        font  = self._load_font(token.font_path, token.font_size)
+        lines = self._wrapper.wrap(component.text, font, node.width)
 
-        draw.text(
-            (node.x, node.y),
-            component.text,
-            fill=token.color,
-            font=font,
-        )
+        y = node.y
+        for line in lines:
+            draw.text(
+                (node.x, y),
+                line,
+                fill=token.color,
+                font=font,
+            )
+            y += token.line_height
 
     def _paint_button(
         self,
