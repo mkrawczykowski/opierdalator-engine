@@ -5,9 +5,13 @@
 	$color_headings: #272727
 	$color_borders: #f6f6f6
 	$color_background: #f2f2f2
+	$color_background_2: #ffffff
 	
 #typography
-paragraph
+button
+	size: 16
+	line_height: 1.2
+text
 	size: 16
 	line_height: 1.2
 heading_1
@@ -19,22 +23,31 @@ button
 	padding_vertical: 10
 	padding_horizontal: 20
 	background_color: $color_secondary_accent
-	border: 0
+	border_radius: 10
+	border_width: 0
 	
 section
 	padding_vertical: 80
 	background_color: $color_background
 	
+row
+	max_width: 1200
+	background_color: $color_background
+	background_color: $color_background_2
 	
 	
 #content
 @@section
+@@row
+@@column
 @@heading_1: testowy heading
-@@text:  jakiś krótki tekst
+@@text: jakiś krótki tekst
 @@button: przycisk
 
 
 @@section
+@@row
+@@column
 @@heading_1: nagłowek drugiej sekcji
 @@text: to jest drugi akapit
 @@button: przycisk drugi

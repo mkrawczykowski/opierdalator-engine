@@ -21,13 +21,15 @@ class LayoutRenderer:
     Operuje wyłącznie na DesignTokens i drzewie komponentów.
     """
 
+    CANVAS_WIDTH = 1980
+
     def render(
         self,
         sections: list[Section],
         tokens: DesignTokens,
         filename: str,
     ) -> None:
-        canvas_width = tokens.spacing.container_width + tokens.spacing.margin * 2
+        canvas_width = self.CANVAS_WIDTH
 
         layout = VerticalLayout(
             spacing=tokens.spacing,

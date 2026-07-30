@@ -5,7 +5,7 @@ from oe.theme import ThemeDNA
 from oe.variation import VariationEngine
 from oe.renderer import PNGRenderer, LayoutRenderer
 from oe.design.tokens import default_tokens
-from oe.content import parse, parse_tokens, parse_settings, TokenVariator
+from oe.content import parse, parse_tokens, build_sections, parse_settings, TokenVariator
 
 INPUT_DIR = pathlib.Path("input")
 OUTPUT_DIR = pathlib.Path("output")
@@ -43,8 +43,8 @@ def render_project(
         # Variator działa na tokenach z MD (nie na surowych defaults)
         varied_tokens = variator.vary(md_tokens, settings.variability_pct, seed=i)
 
-        # Przebuduj sekcje z nowym zestawem tokenów
-        sections = parse(contents_path, varied_tokens)
+        # Buduj sekcje z varied_tokens — bez ponownego aplikowania MD
+        sections = build_sections(contents_path, varied_tokens)
 
         out_file = out_dir / f"layout_board_{i}.png"
         layout_renderer.render(sections, varied_tokens, str(out_file))

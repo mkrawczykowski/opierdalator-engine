@@ -4,6 +4,8 @@ from oe.renderer.components.text import Text
 from oe.renderer.components.heading_1 import Heading1
 from oe.renderer.components.button import Button
 from oe.renderer.components.section import Section
+from oe.renderer.components.row import Row
+from oe.renderer.components.column import Column
 
 from .layout_node import LayoutNode
 
@@ -34,6 +36,10 @@ class NodePainter:
 
         if isinstance(component, Section):
             self._paint_section(draw, node)
+        elif isinstance(component, Row):
+            self._paint_row(draw, node)
+        elif isinstance(component, Column):
+            pass  # Column jest transparentny
         elif isinstance(component, Heading1):
             self._paint_text(draw, node)
         elif isinstance(component, Text):
@@ -48,10 +54,21 @@ class NodePainter:
         draw: ImageDraw.ImageDraw,
         node: LayoutNode,
     ) -> None:
+        component: Section = node.component  # type: ignore[assignment]
         draw.rectangle(
             (node.x, node.y, node.x + node.width, node.y + node.height),
-            fill=None,
-            outline=None,
+            fill=component.background_color,
+        )
+
+    def _paint_row(
+        self,
+        draw: ImageDraw.ImageDraw,
+        node: LayoutNode,
+    ) -> None:
+        component: Row = node.component  # type: ignore[assignment]
+        draw.rectangle(
+            (node.x, node.y, node.x + node.width, node.y + node.height),
+            fill=component.background_color,
         )
 
     def _paint_text(
@@ -99,13 +116,15 @@ class NodePainter:
         font = self._load_font(typography.font_path, typography.font_size)
 
         text_x = x0 + style.padding_x
-        text_y = y0 + style.padding_y
+        # Pionowe centrowanie: środek przycisku
+        text_y = y0 + btn_height // 2
 
         draw.text(
             (text_x, text_y),
             component.label,
             fill=style.text_color,
             font=font,
+            anchor="lm",
         )
 
     # ------------------------------------------------------------------

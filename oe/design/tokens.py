@@ -23,12 +23,22 @@ class ButtonToken:
 
 
 @dataclass
+class SectionToken:
+    background_color: str
+
+
+@dataclass
+class RowToken:
+    max_width: int
+    background_color: str
+
+
+@dataclass
 class SpacingToken:
     container_width: int
     section_padding_top: int
     section_padding_bottom: int
     margin: int
-
 
 
 @dataclass
@@ -48,6 +58,8 @@ class DesignTokens:
     button_text: TypographyToken
     spacing: SpacingToken
     button: ButtonToken
+    section: SectionToken
+    row: RowToken
     colors: ColorToken
 
 
@@ -91,6 +103,13 @@ def default_tokens() -> DesignTokens:
             background="#3B82F6",
             border_color="#3B82F6",
             text_color="#FFFFFF",
+        ),
+        section=SectionToken(
+            background_color="#FFFFFF",
+        ),
+        row=RowToken(
+            max_width=1200,
+            background_color="#FFFFFF",
         ),
         colors=ColorToken(
             background="#FFFFFF",
